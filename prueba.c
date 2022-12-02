@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 18:13:26 by adpachec          #+#    #+#             */
-/*   Updated: 2022/12/02 14:07:43 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:58:38 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,11 +240,12 @@ char	*try_access(char **cmd, char **paths)
 	i = -1;
 	while (paths[++i] && err < 0)
 	{
-		if (paths[i][ft_strlen(paths[i] - 1)] != '/')
-			paths[i] = ft_strjoin(paths[i], '/');
+		if (paths[i][ft_strlen(paths[i]) - 1] != '/')
+			paths[i] = ft_strjoin(paths[i], "/");
 		file_path = ft_strjoin(paths[i], cmd[0]);
 		err = access(file_path, X_OK);
 	}
+	free (paths);
 	return (file_path);
 }
 
