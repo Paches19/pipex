@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:19:47 by adpachec          #+#    #+#             */
-/*   Updated: 2022/11/22 19:04:54 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/02 12:11:14 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,32 @@ void	error_management(void)
 	exit (-1);
 }
 
+char	*get_path(char **envp)
+{
+	int		i;
+	char	*env;
+	char	**paths;
+
+	i = 0;
+	while (ft_strncmp(envp[i], "PATH=", 5))
+		++i;
+	env = ft_substr(envp[i], 5, ft_strlen(envp[i]));
+	paths = ft_split(env, ':');
+	free (env);
+	return (paths);
+}
+
 void	pipex(char *const *argv, char **envp)
 {
 	int		fd1[2];
 	int		fd_exit;
 	pid_t	pid;
 	int		status;
-	char	*av1[] = {"ls", "-l", NULL};
-	char	*av2[] = {"ls", "-l", NULL};
+	char	*av1;
+	char	*av2;
+	char	**paths;
 	
+	paths = get_path(envp);
 	if (pipe(fd1) < 0)
 		error_management();
 	pid = fork();
@@ -63,8 +80,8 @@ int	main(int argc, char **argv, char **envp)
 	char *const	*av;
 	int			i;
 
-	if (argc != 5)
-		return (-1);
+	//if (argc != 5)
+		//return (-1);
 	i = -1;
 	while (envp[++i])
 		printf("env[%d]: %s\n\n", i, envp[i]);

@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:19:17 by adpachec          #+#    #+#             */
-/*   Updated: 2022/11/22 18:17:48 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:49:36 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,6 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
+# include <sys/wait.h>
+
 #endif
