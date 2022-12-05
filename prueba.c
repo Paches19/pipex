@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 18:13:26 by adpachec          #+#    #+#             */
-/*   Updated: 2022/12/02 16:58:38 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/05 10:28:39 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,24 +252,16 @@ char	*try_access(char **cmd, char **paths)
 int	main(int argc, char **argv, char **envp)
 {
 	int			i;
-	char	*av[] = {"ls", "-l", NULL};
+	char	*av[] = {"ls", NULL, NULL};
 	char	*env[] = {NULL};
-	char 	*av2[] = {"wc", "-l", NULL};
+	char 	*av2[] = {"wc -l", NULL};
 	char	**cmd;
 	int		errno;
 	char	**paths;
 	char	*path;
-
-	paths = get_path(envp);
-	cmd = get_cmd(argv);
-	try_access(cmd, paths);
 	
-	//if (argc != 5)
-		//return (-1);
-	//i = -1;
-	//while (envp[++i])
-		//printf("env[%d]: %s\n\n", i, envp[i]);
-	//errno = execve(cmd, av, env);
+	//execve("/usr/bin/ls", av, env);
+	execve("/usr/bin/ls", av, env);
 //	if (errno)
 	//	perror(strerror(errno));
 	//pipex(av, envp);

@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:19:47 by adpachec          #+#    #+#             */
-/*   Updated: 2022/12/02 16:58:52 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/05 11:30:52 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,6 +242,8 @@ char	*try_access(char **cmd, char **paths, int n_cmd)
 	int		err;
 	int		i;
 
+	if (cmd[n_cmd][0] == '-')
+		++n_cmd;
 	err = -1;
 	i = -1;
 	while (paths[++i] && err < 0)
@@ -260,6 +262,7 @@ void	first_son(int fd1[2], char *const *argv, char **envp)
 	char	**cmd;
 	char	*file_path;
 	char	**av;
+	int		size_cmd;
 
 	paths = get_path(envp);
 	cmd = get_cmd(argv);
@@ -269,29 +272,48 @@ void	first_son(int fd1[2], char *const *argv, char **envp)
 	close(fd1[WRITE_END]);
 	av = (char **)ft_calloc(sizeof(char *), 3);
 	av[0] = cmd[0];
-	av[1] = cmd[1];
+	if (cmd[1][0] == '-')
+		av[1] = cmd[1];
 	execve(file_path, av, NULL);
 	free (av);
 }
 
+int	get_size_cmd(char **cmd)
+{
+	int	size;
+
+	size = 0;
+	while (cmd[size])
+		++size;
+	return (size);
+}
 void	second_son(int fd1[2], int fd_exit, char *const *argv, char **envp)
 {
 	char	**paths;
 	char	**cmd;
 	char	*file_path;
 	char	**av;
+	int		size_cmd;
 	
 	paths = get_path(envp);
 	cmd = get_cmd(argv);
-	file_path = try_access(cmd, paths, 2);
+	file_path = try_access(cmd, paths, 1);
 	fd_exit = open(argv[4], O_WRONLY);
 	dup2(fd1[READ_END], STDIN_FILENO);
 	close(fd1[READ_END]);
 	dup2(fd_exit, STDOUT_FILENO);
 	av = (char **)ft_calloc(sizeof(char *), 3);
-	av[0] = cmd[0];
-	av[1] = cmd[1];
+	size_cmd = get_size_cmd(cmd);
+	if (cmd[1][0] != '-')
+		av[0] = cmd[1];
+	else
+		av[0] = cmd[2];
+	if (size_cmd > 2 && cmd[2][0] == '-')
+		av[1] = cmd[2];
+	else if (size_cmd > 3 && cmd[3][0])
+		av[1] = cmd[3];
 	execve(file_path, av, NULL);
+	close (fd_exit);
 	free (av);
 }
 

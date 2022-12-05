@@ -1,0 +1,9 @@
+#hidden files
+.DS_store
+.git
+*.o
+*.a
+a.out
+
+main.c
+pipex
