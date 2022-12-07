@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:19:17 by adpachec          #+#    #+#             */
-/*   Updated: 2022/12/02 10:49:36 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/06 11:55:14 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@
 # include <stdio.h>
 # include <string.h>
 # include <sys/wait.h>
+# include "errno.h"
 
 #endif
