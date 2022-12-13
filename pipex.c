@@ -6,16 +6,20 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:19:47 by adpachec          #+#    #+#             */
-/*   Updated: 2022/12/12 20:54:45 by adpachec         ###   ########.fr       */
+/*   Updated: 2022/12/13 12:50:37 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	error_management(int err)
+void	error_management(void)
 {
+	int	err;
+
+	err = errno;
+	printf("\nerrnno: %d\n", err);
 	perror(strerror(err));
-	exit(EXIT_FAILURE);
+	exit(err);
 }
 
 void	ft_bzero(void *s, size_t n)
@@ -37,10 +41,10 @@ void	*ft_calloc(size_t count, size_t size)
 	if (!count)
 		return (malloc(0));
 	if (len / count != size)
-		error_management(EDOM);
+		error_management();
 	ptr = (void *) malloc(len);
 	if (!ptr)
-		error_management(ENOMEM);
+		error_management();
 	ft_bzero(ptr, len);
 	return (ptr);
 }
@@ -62,7 +66,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t			len_s;
 
 	if (!s)
-		error_management(ENOMEM);
+		error_management();
 	len_s = ft_strlen(s);
 	if (start >= len_s)
 	{
@@ -75,7 +79,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	else
 		str = (char *) malloc(sizeof(char) * (len + 1));
 	if (!str)
-		error_management(ENOMEM);
+		error_management();
 	i = -1;
 	while (++i < len && s[start + i])
 		str[i] = s[start + i];
@@ -142,7 +146,7 @@ static void	ft_init_matrix(const char *s, char c, char **res, size_t words)
 			if (!res[j++])
 			{
 				ft_free_matrix(res);
-				error_management(ENOMEM);
+				error_management();
 			}
 		}
 	}
@@ -155,14 +159,14 @@ char	**ft_split(char const *s, char c)
 	char	**res;
 
 	if (!s)
-		error_management(ENOMEM);
+		error_management();
 	words = ft_words(s, c);
 	res = (char **) ft_calloc(sizeof(char *), (words + 1));
 	if (!res)
-		error_management(ENOMEM);
+		error_management();
 	ft_init_matrix(s, c, res, words);
 	if (!res)
-		error_management(ENOMEM);
+		error_management();
 	return (res);
 }
 
@@ -173,11 +177,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	len_s1;
 
 	if (!s1 || !s2)
-		error_management(ENOMEM);
+		error_management();
 	len_s1 = ft_strlen(s1);
 	str = (char *) malloc(sizeof(char) * (len_s1 + ft_strlen(s2) + 1));
 	if (!str)
-		error_management(ENOMEM);
+		error_management();
 	i = 0;
 	while (s1[i])
 	{
@@ -242,13 +246,14 @@ char	*try_access(char **cmd, char **paths)
 		file_path = ft_strjoin(paths[i], cmd[0]);
 		err = access(file_path, X_OK);
 	}
+	printf("\nerraccess: %d\n", err);
 	if (err < 0)
 	{
 		write(2, cmd[0], ft_strlen(cmd[0]));
 		write(2, ": command not found\n", 20);
-		free(file_path);
+		//free(file_path);
 		//return (NULL);
-		exit(err);
+		//error_management();
 	}
 	return (file_path);
 }
@@ -278,7 +283,7 @@ char **get_av(char **cmd)
 		if (!av[i])
 		{
 			ft_free_matrix(av);
-			error_management(ENOMEM);
+			error_management();
 		}
 	}
 	av[0] = cmd[0];
@@ -309,7 +314,7 @@ void	first_son(int fd1[2], char *const *argv, char **envp)
 
 	fd_input = open(argv[1], O_RDONLY);
 	if (fd_input < 0)
-		error_management(fd_input);
+		error_management();
 	paths = get_path(envp);
 	cmd = ft_split(argv[2], ' ');
 	file_path = try_access(cmd, paths);
@@ -319,12 +324,13 @@ void	first_son(int fd1[2], char *const *argv, char **envp)
 	close(fd1[READ_END]);
 	dup2(fd1[WRITE_END], STDOUT_FILENO);
 	err = execve(file_path, cmd, NULL);
+	printf("erno antes: %d", errno);
 	close(fd1[WRITE_END]);
 	ft_free_matrix(paths);
 	ft_free_matrix(cmd);
 	free(file_path);
 	if (err < 0)
-		error_management(err);
+		error_management();
 }
 
 void	second_son(int fd1[2], char *const *argv, char **envp)
@@ -335,9 +341,9 @@ void	second_son(int fd1[2], char *const *argv, char **envp)
 	int		err;
 	int		fd_exit;
 
-	fd_exit = open(argv[4], O_CREAT | O_WRONLY);
+	fd_exit = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, S_IRWXU);
 	if (fd_exit < 0)
-		error_management(fd_exit);
+		error_management();
 	file_path = get_paths_cmd_son_2(&paths, &cmd, argv, envp);
 	dup2(fd1[READ_END], STDIN_FILENO);
 	close(fd1[READ_END]);
@@ -348,7 +354,7 @@ void	second_son(int fd1[2], char *const *argv, char **envp)
 	ft_free_matrix(cmd);
 	free(file_path);
 	if (err < 0)
-		error_management(err);
+		error_management();
 }
 
 void	pipex(char *const *argv, char **envp)
@@ -361,10 +367,10 @@ void	pipex(char *const *argv, char **envp)
 	status = 0;
 	err = pipe(fd1);
 	if (err < 0)
-		error_management(err);
+		error_management();
 	pid = fork();
 	if (pid < 0)
-		error_management(pid);
+		error_management();
 	if (!pid)
 		first_son(fd1, argv, envp);
 	else
@@ -377,16 +383,19 @@ void	pipex(char *const *argv, char **envp)
 			close(fd1[READ_END]);
 	}
 	waitpid(pid, &status, 0);
-	if (status == 127)
-		exit(127);
-	else if (status != 0)
-		exit(EXIT_FAILURE);
+	printf("status: %d\n", WEXITSTATUS(status));
+	if (status != 0)
+		exit(WEXITSTATUS(status));
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	if (argc != 5)
-		error_management(EINVAL);
+	{
+		write(2, "ERROR: not enough arguments\n", 29);
+		write(2, "ARG: file_input \n", 29);
+		exit (1);
+	}
 	pipex(argv, envp);
 	return (0);
 }
