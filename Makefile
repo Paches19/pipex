@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/12/13 16:59:16 by adpachec          #+#    #+#              #
-#    Updated: 2022/12/13 17:00:02 by adpachec         ###   ########.fr        #
+#    Created: 2023/02/01 10:46:27 by adpachec          #+#    #+#              #
+#    Updated: 2023/02/02 12:33:46 by adpachec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ SRC_DIR			= srcs/
 INC_DIR			= ./include/
 OBJ_DIR			= obj/
 
-SRC				= pipex.c pipex_utils_1.c pipex_utils_2.c pipex_utils_3.c \
-					pipex_get_fts.c
+SRC				= pipex.c pipex_utils.c matrix_utils.c get_paths_access.c \
+					error_management.c
 
 SRCS			= $(addprefix $(SRC_DIR), $(SRC))
 
@@ -25,7 +25,7 @@ OBJ				= $(SRC:.c=.o)
 OBJS			= $(addprefix $(OBJ_DIR), $(OBJ))
 
 CC				= gcc
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -Imlx
 
 all: $(OBJ_DIR) $(NAME)
 

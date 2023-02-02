@@ -6,27 +6,27 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:19:47 by adpachec          #+#    #+#             */
-/*   Updated: 2022/12/13 17:00:56 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/02/02 12:34:41 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h"
+#include "../include/pipex.h"
 
-static void	first_son(int fd1[2], char *const *argv, char **envp)
+void	first_son(int fd1[2], char *const *argv, char **envp)
 {
 	char	**paths;
 	char	**cmd;
 	char	*file_path;
-	int		fd_input;
 	int		err;
+	int		fd_input;
 
 	fd_input = open(argv[1], O_RDONLY);
 	if (fd_input < 0)
-		error_management();
+		error_management(fd_input);
 	paths = get_path(envp);
 	cmd = ft_split(argv[2], ' ');
 	file_path = try_access(cmd, paths);
-	cmd = get_av(cmd);
+	//cmd = get_av(cmd);
 	dup2(fd_input, STDIN_FILENO);
 	close(fd_input);
 	close(fd1[READ_END]);
@@ -35,23 +35,30 @@ static void	first_son(int fd1[2], char *const *argv, char **envp)
 	close(fd1[WRITE_END]);
 	ft_free_matrix(paths);
 	ft_free_matrix(cmd);
-	free(file_path);
-	if (err != 0)
-		error_management();
+	free(file_path);	
+	if (err < 0)
+		error_management(err);
 }
 
-static void	second_son(int fd1[2], char *const *argv, char **envp)
+void	second_son(int fd1[2], char *const *argv, char **envp)
 {
 	char	**paths;
 	char	**cmd;
 	char	*file_path;
-	int		fd_exit;
 	int		err;
+	int		fd_exit;
 
-	fd_exit = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, S_IRWXU);
+	fd_exit = open(argv[4], O_CREAT | O_WRONLY);
 	if (fd_exit < 0)
-		error_management();
+		error_management(fd_exit);
 	file_path = get_paths_cmd_son_2(&paths, &cmd, argv, envp);
+	//cmd = get_av(cmd);
+	/*if (file_path[0] == '^')
+	{
+		ft_free_matrix(paths);
+		ft_free_matrix(cmd);
+		exit(127);	
+	}*/
 	dup2(fd1[READ_END], STDIN_FILENO);
 	close(fd1[READ_END]);
 	dup2(fd_exit, STDOUT_FILENO);
@@ -60,25 +67,28 @@ static void	second_son(int fd1[2], char *const *argv, char **envp)
 	ft_free_matrix(paths);
 	ft_free_matrix(cmd);
 	free(file_path);
-	if (err != 0)
-		error_management();
+	if (err < 0)
+		error_management(err);
 }
 
-static void	pipex(char *const *argv, char **envp)
+void	pipex(char *const *argv, char **envp)
 {
 	int		fd1[2];
 	pid_t	pid;
 	int		status;
+	int		err;
 
-	if (pipe(fd1))
-		error_management();
+	status = 0;
+	err = pipe(fd1);
+	if (err < 0)
+		error_management(err);
 	pid = fork();
-	if (pid < 0)
-		error_management();
 	if (!pid)
 		first_son(fd1, argv, envp);
 	else
 	{
+		//waitpid(pid, &status, 0);
+		//exit_status(status);
 		close(fd1[WRITE_END]);
 		pid = fork();
 		if (!pid)
@@ -87,18 +97,13 @@ static void	pipex(char *const *argv, char **envp)
 			close(fd1[READ_END]);
 	}
 	waitpid(pid, &status, 0);
-	if (status != 0)
-		exit(WEXITSTATUS(status));
+	exit_status(status);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	if (argc != 5)
-	{
-		write(2, "ERROR: not enough arguments\n", 29);
-		write(2, "ARG: file_input command1 command2 file_output\n", 46);
-		exit(1);
-	}
+		error_management(EINVAL);
 	pipex(argv, envp);
 	return (0);
 }
