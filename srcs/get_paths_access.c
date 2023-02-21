@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 12:26:30 by adpachec          #+#    #+#             */
-/*   Updated: 2023/02/02 12:35:04 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/02/21 10:39:41 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,34 +37,6 @@ int	get_size_cmd(char **cmd)
 	return (size);
 }
 
-char	**get_av(char **cmd)
-{
-	char	**av;
-	int		size_cmd;
-	int		i;
-
-	size_cmd = get_size_cmd(cmd);
-	av = (char **)ft_calloc(sizeof(char *), size_cmd + 1);
-	if (!av)
-		error_management(ENOMEM);
-	i = -1;
-	while (++i < size_cmd)
-	{
-		av[i] = (char *)ft_calloc(sizeof (char), ft_strlen(cmd[i]) + 1);
-		if (!av[i])
-		{
-			ft_free_matrix(av);
-			ft_free_matrix(cmd);
-			error_management(ENOMEM);
-		}
-	}
-	i = -1;
-	while (cmd[++i])
-		av[i] = cmd[i];
-	ft_free_matrix(cmd);
-	return (av);
-}
-
 char	*try_access(char **cmd, char **paths)
 {
 	char	*file_path;
@@ -79,18 +51,16 @@ char	*try_access(char **cmd, char **paths)
 		if (file_path)
 			free(file_path);
 		if (paths[i][ft_strlen(paths[i]) - 1] != '/')
-		{
 			paths[i] = ft_strjoin_free(paths[i], "/");
-		}
 		file_path = ft_strjoin(paths[i], cmd[0]);
 		err = access(file_path, X_OK);
 	}
 	if (err < 0)
 	{
+		free(file_path);
 		write(2, cmd[0], ft_strlen(cmd[0]));
 		write(2, ": command not found\n", 20);
-		//return ("^");
-		//exit(127);
+		exit(127);
 	}
 	return (file_path);
 }

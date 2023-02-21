@@ -6,7 +6,7 @@
 #    By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/01 10:46:27 by adpachec          #+#    #+#              #
-#    Updated: 2023/02/02 12:33:46 by adpachec         ###   ########.fr        #
+#    Updated: 2023/02/20 16:41:41 by adpachec         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ OBJ				= $(SRC:.c=.o)
 OBJS			= $(addprefix $(OBJ_DIR), $(OBJ))
 
 CC				= gcc
-CFLAGS			= -Wall -Wextra -Werror -Imlx
+CFLAGS			= -Wall -Wextra -Werror
 
 all: $(OBJ_DIR) $(NAME)
 

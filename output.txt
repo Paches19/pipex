@@ -1,1 +1,9 @@
-Hi FT
+total 64
+-rw-r--r--  1 adpachec  2019   1497 Feb 20 16:41 Makefile
+drwxr-xr-x  3 adpachec  2019    102 Feb 20 16:41 include
+-rw-r--r--  1 adpachec  2019     68 Feb 21 10:40 input.txt
+drwxr-xr-x  7 adpachec  2019    238 Feb 21 10:40 obj
+-rwx------  1 adpachec  2019     61 Feb 21 10:38 out.txt
+-rw-r--r--  1 adpachec  2019      0 Feb 21 10:41 output.txt
+-rwxr-xr-x  1 adpachec  2019  18312 Feb 21 10:40 pipex
+drwxr-xr-x  7 adpachec  2019    238 Feb 20 16:41 srcs

@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:19:47 by adpachec          #+#    #+#             */
-/*   Updated: 2023/02/02 12:34:41 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/02/21 10:40:41 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	first_son(int fd1[2], char *const *argv, char **envp)
 	paths = get_path(envp);
 	cmd = ft_split(argv[2], ' ');
 	file_path = try_access(cmd, paths);
-	//cmd = get_av(cmd);
 	dup2(fd_input, STDIN_FILENO);
 	close(fd_input);
 	close(fd1[READ_END]);
@@ -48,17 +47,10 @@ void	second_son(int fd1[2], char *const *argv, char **envp)
 	int		err;
 	int		fd_exit;
 
-	fd_exit = open(argv[4], O_CREAT | O_WRONLY);
+	fd_exit = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd_exit < 0)
 		error_management(fd_exit);
 	file_path = get_paths_cmd_son_2(&paths, &cmd, argv, envp);
-	//cmd = get_av(cmd);
-	/*if (file_path[0] == '^')
-	{
-		ft_free_matrix(paths);
-		ft_free_matrix(cmd);
-		exit(127);	
-	}*/
 	dup2(fd1[READ_END], STDIN_FILENO);
 	close(fd1[READ_END]);
 	dup2(fd_exit, STDOUT_FILENO);
@@ -87,8 +79,6 @@ void	pipex(char *const *argv, char **envp)
 		first_son(fd1, argv, envp);
 	else
 	{
-		//waitpid(pid, &status, 0);
-		//exit_status(status);
 		close(fd1[WRITE_END]);
 		pid = fork();
 		if (!pid)
