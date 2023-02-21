@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 12:26:30 by adpachec          #+#    #+#             */
-/*   Updated: 2023/02/21 10:39:41 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/02/21 11:26:06 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ char	*try_access(char **cmd, char **paths)
 	return (file_path);
 }
 
-char	*get_paths_cmd_son_2(char ***paths, char ***cmd, char *const *argv, char **envp)
+char	*get_paths_cmd_son_2(char ***paths, char ***cmd, char *const *argv, \
+char **envp)
 {
 	char	*file_path;
 

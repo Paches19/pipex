@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 16:19:47 by adpachec          #+#    #+#             */
-/*   Updated: 2023/02/21 10:44:15 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/02/21 11:25:23 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	first_son(int fd1[2], char *const *argv, char **envp)
 	close(fd1[WRITE_END]);
 	ft_free_matrix(paths);
 	ft_free_matrix(cmd);
-	free(file_path);	
+	free(file_path);
 	if (err < 0)
 		error_management(err);
 }

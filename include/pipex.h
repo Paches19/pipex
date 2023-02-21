@@ -6,7 +6,7 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:19:17 by adpachec          #+#    #+#             */
-/*   Updated: 2023/02/02 12:32:52 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/02/21 11:25:49 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	**get_path(char **envp);
 int		get_size_cmd(char **cmd);
 char	**get_av(char **cmd);
 char	*try_access(char **cmd, char **paths);
-char	*get_paths_cmd_son_2(char ***paths, char ***cmd, char *const *argv, char **envp);
-
+char	*get_paths_cmd_son_2(char ***paths, char ***cmd, char *const *argv, \
+		char **envp);
 
 #endif
