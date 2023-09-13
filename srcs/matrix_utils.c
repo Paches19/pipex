@@ -6,11 +6,12 @@
 /*   By: adpachec <adpachec@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 12:28:49 by adpachec          #+#    #+#             */
-/*   Updated: 2023/02/21 11:26:15 by adpachec         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:58:57 by adpachec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+#include "stdio.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -21,6 +22,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (!s)
 		error_management(ENOMEM);
 	len_s = ft_strlen(s);
+	printf("holii \n");
 	if (start >= len_s)
 	{
 		str = (char *) malloc(sizeof(char) * 1);

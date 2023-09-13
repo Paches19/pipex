@@ -1,0 +1,11 @@
+Makefile
+a.sh
+as
+include
+obj
+out
+out.txt
+outfile
+output.txt
+pipex
+srcs
